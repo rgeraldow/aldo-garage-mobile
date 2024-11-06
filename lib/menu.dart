@@ -6,7 +6,7 @@ class MyHomePage extends StatelessWidget {
     final String className = 'PBP B';
     final List<ItemHomepage> items = [
          // Menentukan warna biru untuk item "Lihat Daftar Produk".
-         ItemHomepage("Lihat Daftar Produk", Icons.mood, Colors.blue),
+         ItemHomepage("Lihat Daftar Produk", Icons.directions_car, Colors.blue),
          // Menentukan warna hijau untuk item "Tambah Produk".
          ItemHomepage("Tambah Produk", Icons.add, Colors.green),
          // Membiarkan warna default merah untuk item "Logout".
