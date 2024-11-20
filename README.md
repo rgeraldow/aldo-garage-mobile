@@ -527,3 +527,66 @@
     Untuk kembali ke halaman sebelumnya, `Navigator.pop(context)` dapat digunakan, yang akan menghapus halaman di atas dari *stack* dan kembali ke halaman sebelumnya. Dengan berbagai metode ini, kita dapat mengelola navigasi antar halaman dengan fleksibel dan menyesuaikannya dengan kebutuhan aplikasi.
 
 </details>
+
+<details>
+<summary> <b> Tugas 9 </b> </summary>
+
+## **Implementasi Checklist**
+
+* ### Pembuatan Halaman Login (Flutter)
+
+    - Stateful Widget digunakan karena memiliki elemen dinamis seperti form input untuk username dan password.
+    - Tombol login mengirimkan data username dan password ke endpoint autentikasi Django (auth/login/).
+    - Hasil autentikasi ditampilkan melalui Snackbar, menampilkan apakah login berhasil atau gagal.
+    - Jika login berhasil, pengguna diarahkan ke halaman utama.
+
+* ### Implementasi Autentikasi di Django
+    - App Baru: Dibuat aplikasi bernama authentication untuk menangani fungsi login dan logout.
+    - JSON Response: Endpoint login dan logout dibuat agar mengembalikan JSON sebagai hasil proses autentikasi.
+    - Routing: Ditambahkan rute untuk login di /auth/login dan logout di /auth/logout.
+    - CORS: Menggunakan paket django-cors-headers untuk memungkinkan komunikasi antara Django dan Flutter. Pengaturan CORS ditambahkan pada konfigurasi Django.
+
+* ### Implementasi Autentikasi di Flutter
+    - Dependensi: Menambahkan provider dan pbp_django_auth untuk mempermudah pengelolaan autentikasi.
+    - Provider Instance: Menggunakan Provider di main.dart untuk menyebarkan instance CookieRequest ke semua widget aplikasi.
+    - Halaman Login sebagai Default: Halaman login ditampilkan saat aplikasi pertama kali dijalankan.
+    - Logout: Tombol logout menghapus sesi pengguna dan mengarahkan kembali ke halaman login.
+
+* ### Model Kustom untuk Data JSON (Flutter)
+    - Endpoint JSON: Data diambil dari endpoint /json/ pada Django yang hanya mengembalikan data milik pengguna yang login.
+    - Konversi JSON ke Dart: Struktur JSON dikonversi menjadi model Dart menggunakan alat seperti Quicktype. Model disimpan di `lib/models/shop_entry.dart.`
+    - Properti Model: Model mencakup atribut seperti name, price, description, dll.
+
+* ### Halaman Daftar Item (Flutter)
+    - Navigasi: Setiap item dalam daftar dapat ditekan menggunakan InkWell untuk membuka halaman detail menggunakan Navigator.push.
+    - Detail Data: Halaman menerima data barang sebagai parameter dan menampilkan informasi seperti nama, jumlah, lokasi, harga, dan deskripsi.
+    - Navigasi Balik: Menggunakan tombol back default untuk kembali ke halaman daftar item.
+
+
+## **Jawaban Tugas 9**
+
+* ### Jelaskan mengapa kita perlu membuat model untuk melakukan pengambilan ataupun pengiriman data JSON? Apakah akan terjadi error jika kita tidak membuat model terlebih dahulu?
+
+    Membuat model untuk pengambilan atau pengiriman data JSON penting karena membantu kita mengelola data dengan lebih terstruktur dan rapi. Dalam aplikasi, data JSON biasanya digunakan untuk berkomunikasi dengan server, dan model berfungsi sebagai kerangka yang mendefinisikan bagaimana data tersebut harus disusun. Dengan menggunakan model, kita dapat dengan mudah mengonversi data JSON menjadi objek Dart yang lebih aman dan nyaman digunakan, serta sebaliknya. Selain itu, model mengurangi risiko kesalahan seperti salah membaca nama key, penggunaan tipe data yang tidak sesuai, atau menangani nilai null secara tidak benar. Tanpa model, kita harus mengakses data JSON mentah secara manual, yang lebih rawan error dan membuat kode sulit dibaca atau dipelihara. Meskipun tidak wajib membuat model, bekerja tanpa model dapat menyebabkan kesalahan saat runtime, terutama jika struktur data JSON kompleks atau berubah di masa depan. Oleh karena itu, menggunakan model sangat dianjurkan untuk menjaga aplikasi tetap rapi, mudah dipelihara, dan bebas dari error.
+
+* ### Jelaskan fungsi dari library http yang sudah kamu implementasikan pada tugas ini!
+
+    Library `http` dalam Flutter digunakan untuk menghubungkan aplikasi dengan server melalui internet menggunakan protokol HTTP. Dengan library ini, aplikasi bisa mengirim permintaan seperti GET (untuk mengambil data), POST (untuk mengirim data), PUT (untuk memperbarui data), atau DELETE (untuk menghapus data). Selain itu, library ini juga memudahkan kita untuk menerima dan memproses data dari server, misalnya mengubah data dalam format JSON menjadi bentuk yang bisa dipakai langsung dalam aplikasi. Sederhananya, library `http` adalah alat yang memungkinkan aplikasi Flutter berkomunikasi dengan server untuk mengirim dan menerima informasi.
+
+* ### Jelaskan fungsi dari CookieRequest dan jelaskan mengapa instance CookieRequest perlu untuk dibagikan ke semua komponen di aplikasi Flutter.
+
+    `CookieRequest` adalah sebuah class atau alat yang biasanya digunakan untuk menangani permintaan HTTP yang memerlukan pengelolaan cookie, seperti saat mengakses layanan dengan sesi pengguna. Cookie digunakan untuk menyimpan informasi sesi agar server dapat mengenali pengguna yang sudah login, sehingga aplikasi dapat tetap melacak status login atau preferensi pengguna selama sesi berlangsung. Penting untuk membagikan instance `CookieRequest` ke seluruh komponen aplikasi agar setiap bagian aplikasi dapat menggunakan cookie yang sama, misalnya untuk memastikan semua permintaan HTTP yang memerlukan autentikasi memiliki cookie yang benar. Dengan cara ini, aplikasi dapat menjaga konsistensi data sesi pengguna di berbagai fitur atau layar tanpa harus membuat ulang sesi atau kehilangan informasi login.
+
+* ###  Jelaskan mekanisme pengiriman data mulai dari input hingga dapat ditampilkan pada Flutter.
+
+    Mekanisme pengiriman data dalam Flutter dimulai dari input yang diberikan oleh pengguna, seperti mengisi form atau menekan tombol. Data dari input ini kemudian dikumpulkan dan diproses oleh aplikasi, misalnya dengan mengambil nilai dari controller pada widget seperti `TextField`. Setelah data siap, aplikasi mengirimkannya ke server menggunakan protokol HTTP, biasanya melalui metode POST menggunakan library seperti `http`. Server menerima data tersebut, memprosesnya (misalnya menyimpannya ke database atau menjalankan logika tertentu), dan mengirimkan respons kembali ke aplikasi, biasanya dalam format JSON. Aplikasi Flutter kemudian mengambil respons ini, menguraikan (parsing) data yang diterima, dan memperbarui tampilan UI untuk menampilkan hasilnya kepada pengguna. Semua langkah ini berjalan secara terstruktur, sehingga pengguna dapat melihat perubahan secara real-time atau setelah proses selesai.
+
+* ### Jelaskan mekanisme autentikasi dari login, register, hingga logout. Mulai dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.
+
+    Mekanisme autentikasi dimulai saat pengguna mengisi data akun, seperti email dan password, di aplikasi Flutter untuk login atau register. Data yang dimasukkan dikirim ke server Django menggunakan metode HTTP POST. Untuk proses **register**, Django memeriksa validitas data, seperti memastikan email belum digunakan, lalu menyimpan akun baru ke database. Jika berhasil, Django mengirimkan respons ke Flutter yang menunjukkan bahwa pendaftaran sukses.  
+
+    Untuk **login**, data yang dikirim (email dan password) akan diperiksa oleh Django, mencocokkan dengan data di database. Jika sesuai, Django membuat sesi login dengan menyimpan cookie atau token yang akan dikirim kembali ke Flutter. Aplikasi Flutter menyimpan cookie atau token ini (biasanya di memori atau penyimpanan lokal) untuk digunakan pada permintaan berikutnya. Setelah login berhasil, Flutter menampilkan menu utama atau dashboard sesuai peran pengguna.  
+
+    Proses **logout** dilakukan dengan mengirim permintaan ke Django untuk menghapus sesi atau token. Django kemudian menghapus informasi sesi pengguna di server, dan Flutter juga menghapus cookie atau token yang disimpan. Setelah logout, aplikasi akan mengarahkan pengguna kembali ke halaman login. Mekanisme ini memastikan hanya pengguna yang telah terautentikasi yang dapat mengakses fitur tertentu di aplikasi.
+
+</details>
